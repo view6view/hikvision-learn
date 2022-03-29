@@ -654,3 +654,69 @@ public class Demo1Application implements CommandLineRunner {
 }
 ```
 
+## SQL比较两张表结构差异、两张结构相同表的数据差异
+
+主要使用到union和minus这两个关键字，但是MySQL不支持minus
+
+> 比较表结构
+
+```sql
+(select column_name,table_name
+	from user_tab_columns
+	where table_name = 'EMP'
+minus
+select column_name,table_name
+	from user_tab_columns
+	where table_name = 'DEPT')
+union 
+(select column_name,table_name
+	from user_tab_columns
+	where table_name = 'DEPT'
+minus
+select column_name,table_name
+	from user_tab_columns
+	where table_name = 'EMP');
+```
+
+***注意：表结构信息存储在user_tab_columns，规定表的名称全部为大写形式***
+
+![在这里插入图片描述](mysql/70-164856462550422.png)
+
+结果：得到了两张表不同结构的列名，以及表名
+
+> 比较表数据：
+
+```sql
+(select * from EMP 
+ minus
+select *from EMP2)
+union 
+(select * from EMP2
+minus
+select * from EMP)
+```
+
+**注意：前提是表结构一样，可以进行数据差异查询**
+得到下列结果：
+
+![在这里插入图片描述](mysql/70-164856460151919.png)
+
+结果：得到了两张结构相同表的差异数据
+
+但是无法区分哪一行的数据，属于那张表，因此加上子查询，利用虚拟列名称，进行区分·，sql如下所示：
+
+```sql
+select a.*,'EMP' from 
+	(select *from EMP
+	minus
+	select * FROM EMP2)  a
+union 
+select b.*,'EMP2' from
+	(select * from EMP2
+	minus
+	select * FROM EMP) b
+```
+
+得到的查询结果，如下所示：
+
+![在这里插入图片描述](mysql/70.png)
