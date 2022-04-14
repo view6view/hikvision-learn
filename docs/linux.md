@@ -45,3 +45,9 @@ Java(TM) SE Runtime Environment (build 1.8.0_321-b07)
 Java HotSpot(TM) 64-Bit Server VM (build 25.321-b07, mixed mode)
 ```
 
+## 端口相关
+
+### iptables配置
+
+[centos怎么关闭和卸载iptables - 方舟基地 (wnark.com)](https://www.wnark.com/archives/97.html)
+
