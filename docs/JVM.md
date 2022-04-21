@@ -1240,7 +1240,7 @@ Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚�
 - 《实战 Java 虚拟机》
 - https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-5.html
 
-## JMM内存模型
+# JMM内存模型
 
 我们常说的JVM内存模式指的是JVM的内存分区；而Java内存模式是一种虚拟机规范。
 
@@ -1261,7 +1261,7 @@ Java内存模型（不仅仅是JVM内存分区）：调用栈和本地变量存�
 - 静态成员变量跟随着类定义一起也存放在堆上。
 - 存放在堆上的对象可以被所有持有对这个对象引用的线程访问。当一个线程可以访问一个对象时，它也可以访问这个对象的成员变量。如果两个线程同时调用同一个对象上的同一个方法，它们将会都访问这个对象的成员变量，但是每一个线程都拥有这个成员变量的私有拷贝。
 
-### 硬件内存架构
+## 硬件内存架构
 
 现代硬件内存模型与Java内存模型有一些不同，理解内存模型架构以及Java内存模型如何与它协同工作也是非常重要的。
 
@@ -1283,7 +1283,7 @@ Java内存模型（不仅仅是JVM内存分区）：调用栈和本地变量存�
 
 - **指令重排序问题**：为了使得处理器内部的运算单元能尽量被充分利用，处理器可能会对输入代码进行乱序执行（Out-Of-Order Execution）优化，处理器会在计算之后将乱序执行的结果重组，保证该结果与顺序执行的结果是一致的，但并不保证程序中各个语句计算的先后顺序与输入代码中的顺序一致。因此，如果存在一个计算任务依赖另一个计算任务的中间结果，那么其顺序性并不能靠代码的先后顺序来保证。与处理器的乱序执行优化类似，Java虚拟机的即时编译器中也有类似的指令重排序（Instruction Reorder）优化
 
-### Java内存模型和硬件内存架构之间的桥接
+## Java内存模型和硬件内存架构之间的桥接
 
 Java内存模型与硬件内存架构之间存在差异。硬件内存架构没有区分线程栈和堆。对于硬件，所有的线程栈和堆都分布在主内存中。部分线程栈和堆可能有时候会出现在CPU缓存中和CPU内部的寄存器中。如下图所示：
 
@@ -1302,7 +1302,7 @@ Java内存模型与硬件内存架构之间存在差异。硬件内存架构没�
 
 ![img](JVM/v2-037270b0876b6af680d1832bcc9dca32_720w.jpg)
 
-### JMM模型下的线程间通信：
+## JMM模型下的线程间通信：
 
 线程间通信必须要经过主内存。
 
@@ -1337,7 +1337,7 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
 - 如果一个变量事先没有被lock操作锁定，则不允许对它执行unlock操作；也不允许去unlock一个被其他线程锁定的变量。
 - 对一个变量执行unlock操作之前，必须先把此变量同步到主内存中（执行store和write操作）。
 
-### Java内存模型解决的问题
+## Java内存模型解决的问题
 
 当对象和变量被存放在计算机中各种不同的内存区域中时，就可能会出现一些具体的问题。Java内存模型建立所围绕的问题：在多线程并发过程中，如何处理多线程读同步问题与可见性（多线程缓存与指令重排序）、多线程写同步问题与原子性（多线程竞争race condition）。
 
@@ -1454,3 +1454,186 @@ StoreLoad Barriers是一个“全能型”的屏障，它同时具有其他3个�
 
 - 由Java内存模型来直接保证的原子性变量操作包括read、load、assign、use、store、write，我们大致可以认为基本数据类型变量、引用类型变量、声明为volatile的任何类型变量的访问读写是具备原子性的（long和double的非原子性协定：对于64位的数据，如long和double，Java内存模型规范允许虚拟机将没有被volatile修饰的64位数据的读写操作划分为两次32位的操作来进行，即允许虚拟机实现选择可以不保证64位数据类型的load、store、read和write这四个操作的原子性，即如果有多个线程共享一个并未声明为volatile的long或double类型的变量，并且同时对它们进行读取和修改操作，那么某些线程可能会读取到一个既非原值，也不是其他线程修改值的代表了“半个变量”的数值。但由于目前各种平台下的商用虚拟机几乎都选择把64位数据的读写操作作为原子操作来对待，因此在编写代码时一般也不需要将用到的long和double变量专门声明为volatile）。这些类型变量的读、写天然具有原子性，但类似于 “基本变量++” / “volatile++” 这种复合操作并没有原子性。
 - 如果应用场景需要一个更大范围的原子性保证，需要使用同步块技术。Java内存模型提供了lock和unlock操作来满足这种需求。虚拟机提供了字节码指令monitorenter和monitorexist来隐式地使用这两个操作，这两个字节码指令反映到Java代码中就是同步快——synchronized关键字。
+
+# JVM——自定义类加载器
+
+## 为什么需要自定义类加载器  
+
+网上的大部分自定义类加载器文章，几乎都是贴一段实现代码，然后分析一两句自定义ClassLoader的原理。但是我觉得首先得把为什么需要自定义加载器这个问题搞清楚，因为如果不明白它的作用的情况下，还要去学习它显然是很让人困惑的。
+
+首先介绍自定义类的应用场景：
+
+- 加密：Java代码可以轻易的被反编译，如果你需要把自己的代码进行加密以防止反编译，可以先将编译后的代码用某种加密算法加密，类加密后就不能再用Java的ClassLoader去加载类了，这时就需要自定义ClassLoader在加载类的时候先解密类，然后再加载。
+
+- 从非标准的来源加载代码：如果你的字节码是放在数据库、甚至是在云端，就可以自定义类加载器，从指定的来源加载类。
+
+- 以上两种情况在实际中的综合运用：比如你的应用需要通过网络来传输 Java 类的字节码，为了安全性，这些字节码经过了加密处理。这个时候你就需要自定义类加载器来从某个网络地址上读取加密后的字节代码，接着进行解密和验证，最后定义出在Java虚拟机中运行的类。
+
+## 双亲委派模型
+
+在实现自己的ClassLoader之前，我们先了解一下系统是如何加载类的，那么就不得不介绍双亲委派模型的实现过程。
+
+```java
+//双亲委派模型的工作过程源码
+protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException{
+    // First, check if the class has already been loaded
+    Class c = findLoadedClass(name);
+    if (c == null) {
+        try {
+            if (parent != null) {
+                c = parent.loadClass(name, false);
+            } else {
+                c = findBootstrapClassOrNull(name);
+            }
+        } 
+        catch (ClassNotFoundException e) {
+            // ClassNotFoundException thrown if class not found
+            // from the non-null parent class loader
+            //父类加载器无法完成类加载请求
+        }
+ 
+        if (c == null) {
+            // If still not found, then invoke findClass in order to find the class
+            //子加载器进行类加载 
+            c = findClass(name);
+        }
+    }
+ 
+    if (resolve) {
+        //判断是否需要链接过程，参数传入
+        resolveClass(c);
+    }
+ 
+    return c;
+}
+```
+
+双亲委派模型的工作过程如下：
+
+- 当前类加载器从自己已经加载的类中查询是否此类已经加载，如果已经加载则直接返回原来已经加载的类。
+
+- 如果没有找到，就去委托父类加载器去加载（如代码c = parent.loadClass(name, false)所示）。父类加载器也会采用同样的策略，查看自己已经加载过的类中是否包含这个类，有就返回，没有就委托父类的父类去加载，一直到启动类加载器。因为如果父加载器为空了，就代表使用启动类加载器作为父加载器去加载。
+
+- 如果启动类加载器加载失败（例如在$JAVA_HOME/jre/lib里未查找到该class），则会抛出一个异常ClassNotFoundException，然后再调用当前加载器的findClass()方法进行加载。 
+
+> 双亲委派模型的好处：
+
+- 主要是为了安全性，避免用户自己编写的类动态替换 Java的一些核心类，比如 String。
+
+- 同时也避免了类的重复加载，因为 JVM中区分不同类，不仅仅是根据类名，相同的 class文件被不同的 ClassLoader加载就是不同的两个类。
+
+## 自定义类加载器
+
+- 从上面源码看出，调用loadClass时会先根据委派模型在父加载器中加载，如果加载失败，则会调用当前加载器的findClass来完成加载。
+
+- 因此我们自定义的类加载器只需要继承ClassLoader，并覆盖findClass方法，下面是一个实际例子，在该例中我们用自定义的类加载器去加载我们事先准备好的class文件。
+
+> 自定义一个People.java类做例子
+
+```java
+public class People {
+//该类写在记事本里，在用javac命令行编译成class文件，放在d盘根目录下
+	private String name;
+ 
+	public People() {}
+ 
+	public People(String name) {
+		this.name = name;
+	}
+ 
+	public String getName() {
+		return name;
+	}
+ 
+	public void setName(String name) {
+		this.name = name;
+	}
+ 
+	public String toString() {
+		return "I am a people, my name is " + name;
+	}
+ 
+}
+```
+
+> 自定义类加载器
+
+自定义一个类加载器，需要继承ClassLoader类，并实现findClass方法。其中defineClass方法可以把二进制流字节组成的文件转换为一个java.lang.Class（只要二进制字节流的内容符合Class文件规范）。
+
+```java
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.WritableByteChannel;
+ 
+public class MyClassLoader extends ClassLoader
+{
+    public MyClassLoader()
+    {
+        
+    }
+    
+    public MyClassLoader(ClassLoader parent)
+    {
+        super(parent);
+    }
+    
+    protected Class<?> findClass(String name) throws ClassNotFoundException
+    {
+    	File file = new File("D:/People.class");
+        try{
+            byte[] bytes = getClassBytes(file);
+            //defineClass方法可以把二进制流字节组成的文件转换为一个java.lang.Class
+            Class<?> c = this.defineClass(name, bytes, 0, bytes.length);
+            return c;
+        } 
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        
+        return super.findClass(name);
+    }
+    
+    private byte[] getClassBytes(File file) throws Exception
+    {
+        // 这里要读入.class的字节，因此要使用字节流
+        FileInputStream fis = new FileInputStream(file);
+        FileChannel fc = fis.getChannel();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        WritableByteChannel wbc = Channels.newChannel(baos);
+        ByteBuffer by = ByteBuffer.allocate(1024);
+        
+        while (true){
+            int i = fc.read(by);
+            if (i == 0 || i == -1)
+            break;
+            by.flip();
+            wbc.write(by);
+            by.clear();
+        }
+        fis.close();
+        return baos.toByteArray();
+    }
+}
+```
+
+> 在主函数里使用
+
+```java
+MyClassLoader mcl = new MyClassLoader(); 
+Class<?> clazz = Class.forName("People", true, mcl); 
+Object obj = clazz.newInstance();
+       
+System.out.println(obj);
+System.out.println(obj.getClass().getClassLoader());//打印出我们的自定义类加载器
+```
+
+> 运行结果
+
+![img](JVM/20160825201247004.png)
+
+[从Java的类加载机制谈起：聊聊Java中如何实现热部署（热加载）-阿里云开发者社区 (aliyun.com)](https://developer.aliyun.com/article/828000)
