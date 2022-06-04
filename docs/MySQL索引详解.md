@@ -64,7 +64,7 @@ MySQL中常用的索引结构（索引底层的[数据结构](https://so.csdn.ne
 
 B-树就是B树，多路搜索树，树高一层意味着多一次的磁盘I/O，下图是3阶B树
 
-![在这里插入图片描述](MySQL索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70.png)
+![在这里插入图片描述](mysql索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70.png)
 
 > B树的特征：
 
@@ -78,7 +78,7 @@ B-树就是B树，多路搜索树，树高一层意味着多一次的磁盘I/O�
 
 B+树是B-树的变体，也是一种多路搜索树
 
-![在这里插入图片描述](MySQL索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-16485375372303.png)
+![在这里插入图片描述](mysql索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-16485375372303.png)
 
 > B+树的特征：
 
@@ -92,7 +92,7 @@ B+树是B-树的变体，也是一种多路搜索树
 
 哈希索引就是采用一定的哈希算法，把键值换算成新的哈希值，检索时不需要类似B+树那样从根节点到叶子节点逐级查找，只需一次哈希算法即可立刻定位到相应的位置，速度非常快。
 
-![在这里插入图片描述](MySQL索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-16485378311346.png)
+![在这里插入图片描述](mysql索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-16485378311346.png)
 
 Hash索引仅仅能满足"=",“IN"和”<=>"查询，不能使用范围查询。也不支持任何范围查询，例如WHERE price > 100。
 　　
@@ -102,7 +102,7 @@ Hash索引仅仅能满足"=",“IN"和”<=>"查询，不能使用范围查询�
 
 索引是占据物理空间的，在不同的存储引擎中，索引存在的文件也不同。存储引擎是基于表的，以下分别使用MyISAM和InnoDB存储引擎建立两张表。
 
-![存储引擎是基于表的，以下建立两张别使用MyISAM和InnoDB引擎的表，看看其在文件系统中对应的文件存储格式。](MySQL索引详解/20210130233352294.png)
+![存储引擎是基于表的，以下建立两张别使用MyISAM和InnoDB引擎的表，看看其在文件系统中对应的文件存储格式。](mysql索引详解/20210130233352294.png)
 
 > 存储引擎为MyISAM：
 
@@ -231,11 +231,11 @@ mysql> create table user(
 
 auto_increment修饰的字段需要是一个候选键，需要用key指定，否则报错。我们看下表的结构：
 
-![在这里插入图片描述](MySQL索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164853896857711.png)
+![在这里插入图片描述](mysql索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164853896857711.png)
 
 查看表的索引
 
-![在这里插入图片描述](MySQL索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164853898915714.png)
+![在这里插入图片描述](mysql索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164853898915714.png)
 
 可见key也会生成索引
 
@@ -245,7 +245,7 @@ auto_increment修饰的字段需要是一个候选键，需要用key指定，否
 - UNI 唯一约束
 - MUL 可以重复
 
-![在这里插入图片描述](MySQL索引详解/20210131133111786.png)
+![在这里插入图片描述](mysql索引详解/20210131133111786.png)
 
 如果一个Key有多个约束，将显示约束优先级最高的， PRI>UNI>MUL
 
@@ -259,13 +259,13 @@ auto_increment修饰的字段需要是一个候选键，需要用key指定，否
 
 - InnoDB表的索引和数据是存储在一起的，`.idb`表数据和索引的文件
 
-![在这里插入图片描述](MySQL索引详解/20210330051039780.png)
+![在这里插入图片描述](mysql索引详解/20210330051039780.png)
 
 #### 聚簇索引（主键索引）
 
 B+树 叶子节点包含数据表中行记录就是聚簇索引（索引和数据是存放在一块的）
 
-![在这里插入图片描述](MySQL索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164853929570521.png)
+![在这里插入图片描述](mysql索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164853929570521.png)
 
 可以看到叶子节点包含了完整的数据记录，这就是聚簇索引。因为InnoDB的数据文件（.idb）按主键聚集，所以InnoDB必须有主键（MyISAM可以没有），如果没有显示指定主键，则选取首个为唯一且非空的列作为主键索引，如果还没具备，则MySQL自动为InnoDB表生成一个隐含字段作为主键，这个字段长度为6个字节，类型为长整形。
 
@@ -278,7 +278,7 @@ B+树 叶子节点包含数据表中行记录就是聚簇索引（索引和数�
 
 在聚簇索引之外创建的索引（不是根据主键创建的）称之为辅助索引，辅助索引访问数据总是需要二次查找。辅助索引叶子节点存储的不再是行数据记录，而是主键值。首先通过辅助索引找到主键值，然后到主键索引树中通过主键值找到数据行。
 
-![在这里插入图片描述](MySQL索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164853968972924.png)
+![在这里插入图片描述](mysql索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164853968972924.png)
 
 #### 拓展：InnoDB索引优化
 
@@ -294,7 +294,7 @@ B+树 叶子节点包含数据表中行记录就是聚簇索引（索引和数�
 
 #### MyISAM主键索引
 
-![image-20220329154722559](MySQL索引详解/image-20220329154722559.png)
+![image-20220329154722559](mysql索引详解/image-20220329154722559.png)
 
 可以看到叶子节点的存放的是数据记录的地址。也就是说索引和行数据记录是没有保存在一起的，所以MyISAM的主键索引是非聚簇索引。
 
@@ -312,7 +312,7 @@ B+树 叶子节点包含数据表中行记录就是聚簇索引（索引和数�
 
 假想一个表如下图存储了4行数据。其中Id作为主索引，Name作为辅助索引。图示清晰的显示了聚簇索引和非聚簇索引的差异。
 
-![在这里插入图片描述](MySQL索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164854031107431.png)
+![在这里插入图片描述](mysql索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164854031107431.png)
 
 ### 聚簇索引和非聚簇索引的区别
 
@@ -383,7 +383,7 @@ SQL...
 show profiles;
 ```
 
-![在这里插入图片描述](MySQL索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164854078183234.png)
+![在这里插入图片描述](mysql索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164854078183234.png)
 
 ## 7️⃣索引实战
 
@@ -441,13 +441,13 @@ create table student(
 
 这里有我的一个比对关键项表，或许对有心探索的同学有点帮助，估计看了也有点懵，建议先尝试后再回头看我这个表。
 
-![在这里插入图片描述](MySQL索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164854110793437.png)
+![在这里插入图片描述](mysql索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70-164854110793437.png)
 
 #### key_len讲解
 
 我也稍微讲解一下网文中鲜有提及key_len字节长度计算规则，
 
-![在这里插入图片描述](MySQL索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70#pic_center.png)
+![在这里插入图片描述](mysql索引详解/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdmZWlqaXU=,size_16,color_FFFFFF,t_70#pic_center.png)
 
 ```sh
 mysql> explain select * from student where name='Joe';

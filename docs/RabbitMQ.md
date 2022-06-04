@@ -25,7 +25,7 @@ RabbitMQ 整体上是一个生产者与消费者模型，主要负责接收、�
 
 下面再来看看图1—— RabbitMQ 的整体模型架构。
 
-![图1-RabbitMQ 的整体模型架构](RabbitMQ/96388546.jpg)
+![图1-RabbitMQ 的整体模型架构](rabbitMQ/96388546.jpg)
 
 下面我会一一介绍上图中的一些概念。
 
@@ -46,7 +46,7 @@ RabbitMQ 整体上是一个生产者与消费者模型，主要负责接收、�
 
 Exchange(交换器) 示意图如下：
 
-![Exchange(交换器) 示意图](RabbitMQ/24007899.jpg)
+![Exchange(交换器) 示意图](rabbitMQ/24007899.jpg)
 
 生产者将消息发给交换器的时候，一般会指定一个 **RoutingKey(路由键)**，用来指定这个消息的路由规则，而这个 **RoutingKey 需要与交换器类型和绑定键(BindingKey)联合使用才能最终生效**。
 
@@ -54,7 +54,7 @@ RabbitMQ 中通过 **Binding(绑定)** 将 **Exchange(交换器)** 与 **Queue(�
 
 Binding(绑定) 示意图：
 
-![Binding(绑定) 示意图](RabbitMQ/70553134.jpg)
+![Binding(绑定) 示意图](rabbitMQ/70553134.jpg)
 
 生产者将消息发送给交换器时，需要一个RoutingKey,当 BindingKey 和 RoutingKey 相匹配时，消息会被路由到对应的队列中。在绑定多个队列到同一个交换器的时候，这些绑定允许使用相同的 BindingKey。BindingKey 并不是在所有的情况下都生效，它依赖于交换器类型，比如fanout类型的交换器就会无视，而是将消息路由到所有绑定到该交换器的队列中。
 
@@ -74,7 +74,7 @@ Binding(绑定) 示意图：
 
 下图展示了生产者将消息存入 RabbitMQ Broker,以及消费者从Broker中消费数据的整个流程。
 
-![消息队列的运转过程](RabbitMQ/67952922.jpg)
+![消息队列的运转过程](rabbitMQ/67952922.jpg)
 
 这样图1中的一些关于 RabbitMQ 的基本概念我们就介绍完毕了，下面再来介绍一下 **Exchange Types(交换器类型)** 。
 
@@ -90,7 +90,7 @@ fanout 类型的Exchange路由规则非常简单，它会把所有发送到该Ex
 
 direct 类型的Exchange路由规则也很简单，它会把消息路由到那些 Bindingkey 与 RoutingKey 完全匹配的 Queue 中。
 
-![direct 类型交换器](RabbitMQ/37008021.jpg)
+![direct 类型交换器](rabbitMQ/37008021.jpg)
 
 以上图为例，如果发送消息的时候设置路由键为“warning”,那么消息会路由到 Queue1 和 Queue2。如果在发送消息的时候设置路由键为"Info”或者"debug”，消息只会路由到Queue2。如果以其他的路由键发送消息，则消息不会路由到这两个队列中。
 
@@ -104,7 +104,7 @@ direct 类型常用在处理有优先级的任务，根据任务的优先级把�
 - BindingKey 和 RoutingKey 一样也是点号“．”分隔的字符串；
 - BindingKey 中可以存在两种特殊字符串“*”和“#”，用于做模糊匹配，其中“*”用于匹配一个单词，“#”用于匹配多个单词(可以是零个)。
 
-![topic 类型交换器](RabbitMQ/73843.jpg)
+![topic 类型交换器](rabbitMQ/73843.jpg)
 
 以上图为例：
 
